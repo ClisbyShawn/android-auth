@@ -6,30 +6,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_login.view.*
+import androidx.lifecycle.ViewModelProvider
+import com.android.shawnclisby.androidauth.viewModels.AuthViewModel
+import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_login, container, false).apply {
-
-            this.button_login_login.setOnClickListener {
-                Toast.makeText(
-                    context,
-                    "Email:${tie_login_email.text} and Password:${tie_login_password.text}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
+    private lateinit var authViewModel: AuthViewModel
 
     companion object {
 
         @JvmStatic
         fun newInstance() = LoginFragment()
 
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_login, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        authViewModel = ViewModelProvider(this)
+            .get(AuthViewModel::class.java)
+
+        authViewModel.token.observe(this, { token ->
+            Toast.makeText(requireContext(), token, Toast.LENGTH_LONG).show()
+        })
+
+        button_login_login.setOnClickListener {
+            authViewModel.login(
+                mapOf(
+                    "email" to tie_login_email.text.toString().trim(),
+                    "password" to tie_login_password.text.toString().trim()
+                )
+            )
+        }
     }
 }

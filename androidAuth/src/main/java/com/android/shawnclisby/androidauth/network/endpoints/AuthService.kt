@@ -7,9 +7,9 @@ import retrofit2.http.POST
 
 interface AuthService {
 
-    @POST("auth/login")
-    fun login(@Body user:User):String
+    @POST("login")
+    suspend fun login(@Body user: User): String
 
-    @GET("auth/me")
-    fun me()
+    @GET("me")
+    suspend fun me(): User
 }
