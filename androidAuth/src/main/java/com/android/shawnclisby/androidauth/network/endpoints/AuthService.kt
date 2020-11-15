@@ -8,7 +8,7 @@ import retrofit2.http.POST
 interface AuthService {
 
     @POST("login")
-    suspend fun login(@Body user: User): String
+    suspend fun login(@Body user: Map<String, String>): String
 
     @GET("me")
     suspend fun me(): User

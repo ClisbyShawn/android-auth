@@ -6,9 +6,7 @@ import com.android.shawnclisby.androidauth.network.HTTP
 class AuthRepository(private val http: HTTP) {
 
     suspend fun login(credentials: Map<String, String>): String {
-        return http.client.login(
-            User(credentials)
-        )
+        return http.client.login(credentials)
     }
 
     suspend fun me(): User {
