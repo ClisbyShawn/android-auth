@@ -38,6 +38,10 @@ class LoginFragment : Fragment() {
             Toast.makeText(requireContext(), token, Toast.LENGTH_LONG).show()
         })
 
+        authViewModel.user.observe(this, { user ->
+            Toast.makeText(requireContext(), user.toString(), Toast.LENGTH_LONG).show()
+        })
+
         button_login_login.setOnClickListener {
             authViewModel.login(
                 mapOf(
@@ -45,6 +49,10 @@ class LoginFragment : Fragment() {
                     "password" to tie_login_password.text.toString().trim()
                 )
             )
+        }
+
+        button_login_me.setOnClickListener {
+            authViewModel.me()
         }
     }
 }

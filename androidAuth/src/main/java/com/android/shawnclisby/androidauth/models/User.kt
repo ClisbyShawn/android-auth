@@ -10,4 +10,8 @@ data class User(
     val name: String,
     @Json(name = "_id") val id: String? = null,
     @Json(name = "meta_data") val metaData: UserMetaData? = null
-)
+) {
+    override fun toString(): String {
+        return "ID:$id, Name:$name, Email:$email $metaData"
+    }
+}
