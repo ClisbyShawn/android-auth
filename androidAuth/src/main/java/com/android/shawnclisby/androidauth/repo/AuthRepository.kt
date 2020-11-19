@@ -2,14 +2,24 @@ package com.android.shawnclisby.androidauth.repo
 
 import com.android.shawnclisby.androidauth.models.User
 import com.android.shawnclisby.androidauth.network.HTTP
+import com.android.shawnclisby.androidauth.network.handler.Resource
+import com.android.shawnclisby.androidauth.network.handler.ResponseHandler
 
-class AuthRepository(private val http: HTTP) {
+class AuthRepository(private val http: HTTP, private val responseHandler: ResponseHandler) {
 
-    suspend fun login(credentials: Map<String, String>): String {
-        return http.client.login(credentials)
+    suspend fun login(credentials: Map<String, String>): Resource<String?> {
+        return try {
+            responseHandler.handleSuccess(http.client.login(credentials))
+        } catch (e: Exception) {
+            responseHandler.handleFailure(e)
+        }
     }
 
-    suspend fun me(): User {
-        return http.client.me()
+    suspend fun me(): Resource<User?> {
+        return try {
+            responseHandler.handleSuccess(http.client.me())
+        } catch (e: Exception) {
+            responseHandler.handleFailure(e)
+        }
     }
 }

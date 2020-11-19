@@ -16,7 +16,7 @@ object HTTP {
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("")
         .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build())
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
         .build()
 
     val client: AuthService = retrofit.create(AuthService::class.java)
