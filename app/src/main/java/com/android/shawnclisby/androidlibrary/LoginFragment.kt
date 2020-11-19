@@ -1,4 +1,4 @@
-package com.android.shawnclisby.androidauth
+package com.android.shawnclisby.androidlibrary
 
 import android.os.Bundle
 import android.view.LayoutInflater
