@@ -2,7 +2,6 @@ package com.android.shawnclisby.androidlibrary
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.android.shawnclisby.androidauth.LoginFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
