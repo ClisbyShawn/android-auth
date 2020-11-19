@@ -34,12 +34,25 @@ class LoginFragment : Fragment() {
         authViewModel = ViewModelProvider(this)
             .get(AuthViewModel::class.java)
 
-        authViewModel.token.observe(this, { token ->
-            Toast.makeText(requireContext(), token, Toast.LENGTH_LONG).show()
+        authViewModel.token.observe(this, { response ->
+            response.data?.let { token ->
+                Toast.makeText(requireContext(), token, Toast.LENGTH_LONG).show()
+            }
+
+            response.message?.let { error ->
+                Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+            }
         })
 
-        authViewModel.user.observe(this, { user ->
-            Toast.makeText(requireContext(), user.toString(), Toast.LENGTH_LONG).show()
+        authViewModel.user.observe(this, { response ->
+            response.data?.let { user ->
+                Toast.makeText(requireContext(), "$user", Toast.LENGTH_LONG).show()
+            }
+
+            response.message?.let { error ->
+                Toast.makeText(requireContext(), error, Toast.LENGTH_LONG)
+                    .show()
+            }
         })
 
         button_login_login.setOnClickListener {

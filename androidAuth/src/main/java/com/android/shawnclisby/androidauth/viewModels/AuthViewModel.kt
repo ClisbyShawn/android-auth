@@ -6,19 +6,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.shawnclisby.androidauth.models.User
 import com.android.shawnclisby.androidauth.network.HTTP
+import com.android.shawnclisby.androidauth.network.handler.AuthResponseHandler
+import com.android.shawnclisby.androidauth.network.handler.Resource
 import com.android.shawnclisby.androidauth.repo.AuthRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
 
-    private val authRepo = AuthRepository(HTTP)
+    private val authRepo = AuthRepository(HTTP, AuthResponseHandler())
 
-    private val _token: MutableLiveData<String> = MutableLiveData()
-    val token: LiveData<String> = _token
+    private val _token: MutableLiveData<Resource<String?>> = MutableLiveData(Resource.loading(null))
+    val token: LiveData<Resource<String?>> = _token
 
-    private val _user: MutableLiveData<User> = MutableLiveData()
-    val user: LiveData<User> = _user
+    private val _user: MutableLiveData<Resource<User?>> = MutableLiveData(Resource.loading(null))
+    val user: LiveData<Resource<User?>> = _user
 
     fun login(credentials: Map<String, String>) {
         viewModelScope.launch(IO) {
