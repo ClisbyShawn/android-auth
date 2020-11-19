@@ -1,5 +1,6 @@
 package com.android.shawnclisby.androidauth.network
 
+import com.android.shawnclisby.androidauth.BuildConfig
 import com.android.shawnclisby.androidauth.network.endpoints.AuthService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -14,7 +15,7 @@ object HTTP {
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("")
+        .baseUrl(BuildConfig.SECRET_BASE_URL)
         .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build())
         .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
         .build()

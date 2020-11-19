@@ -86,3 +86,5 @@ lint/reports/
 
 # Android Profiling
 *.hprof
+
+hidden/

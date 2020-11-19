@@ -4,6 +4,9 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
 }
+def secretPropertiesFile = rootProject.file("androidAuth/src/main/java/com/android/shawnclisby/androidauth/hidden/secrets.properties")
+def secretProperties = new Properties()
+secretProperties.load(new FileInputStream(secretPropertiesFile))
 
 android {
     compileSdkVersion 29
@@ -16,6 +19,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+        
+        buildConfigField("String", "SECRET_BASE_URL", secretProperties["SECRET_BASE_URL"])
+        buildConfigField("String", "SECRET_FILE_NAME", secretProperties["SECRET_FILE_NAME"])
     }
 
     buildTypes {
