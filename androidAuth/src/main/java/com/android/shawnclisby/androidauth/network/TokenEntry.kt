@@ -31,7 +31,7 @@ object TokenEntry {
 
     @Throws(NullPointerException::class)
     fun getToken(): String {
-        var token: String = ""
+        var token:String
         if (::encryptedSharedPreferences.isInitialized) {
             with(encryptedSharedPreferences) {
                 token = getString(BuildConfig.TOKEN_KEY, "") ?: ""
