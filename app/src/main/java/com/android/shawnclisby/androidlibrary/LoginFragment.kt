@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.android.shawnclisby.androidauth.network.TokenEntry
 import com.android.shawnclisby.androidauth.viewModels.AuthViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -36,7 +37,7 @@ class LoginFragment : Fragment() {
 
         authViewModel.token.observe(this, { response ->
             response.data?.let { token ->
-                Toast.makeText(requireContext(), token, Toast.LENGTH_LONG).show()
+                TokenEntry.onToken(token)
             }
 
             response.message?.let { error ->

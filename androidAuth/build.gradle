@@ -22,6 +22,8 @@ android {
         
         buildConfigField("String", "SECRET_BASE_URL", secretProperties["SECRET_BASE_URL"])
         buildConfigField("String", "SECRET_FILE_NAME", secretProperties["SECRET_FILE_NAME"])
+        buildConfigField("String", "MY_SECRET_KEY", secretProperties["MY_SECRET_KEY"])
+        buildConfigField("String", "TOKEN_KEY", secretProperties["TOKEN_KEY"])
     }
 
     buildTypes {
@@ -64,4 +66,7 @@ dependencies {
 
     //Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+
+    //Jetpack Encryption
+    implementation "androidx.security:security-crypto:1.1.0-alpha02"
 }
