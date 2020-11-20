@@ -33,7 +33,7 @@ open class ResponseHandler {
         return when (code) {
             401 -> "Unauthorized"
             404 -> "Not found"
-            else -> "Something went wrong"
+            else -> "Cannot connect to server."
         }
     }
 }
