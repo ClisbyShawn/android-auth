@@ -68,5 +68,9 @@ class LoginFragment : Fragment() {
         button_login_me.setOnClickListener {
             authViewModel.me()
         }
+
+        button_login_logout.setOnClickListener {
+            authViewModel.logout()
+        }
     }
 }

@@ -34,4 +34,8 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun logout(){
+        authRepo.logout()
+    }
+
 }
