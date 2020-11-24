@@ -10,7 +10,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        TokenEntry.init(this, BuildConfig.SECRET_FILE_NAME, BuildConfig.TOKEN_KEY)
-        AuthHTTP.init(BuildConfig.SECRET_BASE_URL)
+        TokenEntry.init(this, "yourFileName", "yourKey")
+        AuthHTTP.init("http://www.yoururl.com")
     }
 }
