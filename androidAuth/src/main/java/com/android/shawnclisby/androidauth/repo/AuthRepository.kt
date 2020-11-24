@@ -2,6 +2,7 @@ package com.android.shawnclisby.androidauth.repo
 
 import com.android.shawnclisby.androidauth.models.User
 import com.android.shawnclisby.androidauth.network.AuthHTTP
+import com.android.shawnclisby.androidauth.network.TokenEntry
 import com.android.shawnclisby.androidauth.network.handler.Resource
 import com.android.shawnclisby.androidauth.network.handler.ResponseHandler
 
@@ -21,5 +22,9 @@ class AuthRepository(private val http: AuthHTTP, private val responseHandler: Re
         } catch (e: Exception) {
             responseHandler.handleFailure(e)
         }
+    }
+
+    fun logout() {
+        TokenEntry.remove()
     }
 }

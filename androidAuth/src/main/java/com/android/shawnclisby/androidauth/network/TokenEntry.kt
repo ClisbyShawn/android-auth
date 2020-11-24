@@ -1,54 +1,34 @@
 package com.android.shawnclisby.androidauth.network
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import com.android.shawnclisby.androidauth.BuildConfig
+import com.android.shawnclisby.androidauth.network.data.TokenDataSource
+import com.android.shawnclisby.androidauth.repo.TokenRepository
 
 object TokenEntry {
-    private lateinit var encryptedSharedPreferences: SharedPreferences
 
-    fun init(applicationContext: Context) {
-        encryptedSharedPreferences = EncryptedSharedPreferences.create(
-            BuildConfig.SECRET_FILE_NAME,
-            BuildConfig.MY_SECRET_KEY,
-            applicationContext,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    private lateinit var tokenRepository: TokenRepository
+    private var tokenKey: String = ""
+
+    fun init(applicationContext: Context, fileName: String, key: String) {
+        tokenKey = key
+        tokenRepository = TokenRepository(
+            TokenDataSource(
+                applicationContext,
+                fileName,
+                tokenKey
+            )
         )
-
     }
 
-    @Throws(NullPointerException::class)
     fun onToken(token: String) {
-        if (::encryptedSharedPreferences.isInitialized) {
-            with(encryptedSharedPreferences.edit()) {
-                putString(BuildConfig.TOKEN_KEY, token)
-                apply()
-            }
-        } else throw NullPointerException("Call TokenEntry's init method in Application's onCreate method.")
+        tokenRepository.onToken(token)
     }
 
-    @Throws(NullPointerException::class)
     fun getToken(): String {
-        var token:String
-        if (::encryptedSharedPreferences.isInitialized) {
-            with(encryptedSharedPreferences) {
-                token = getString(BuildConfig.TOKEN_KEY, "") ?: ""
-            }
-
-        } else throw NullPointerException("Call TokenEntry's init method in Application's onCreate method.")
-
-        return token
+        return tokenRepository.getToken(tokenKey)
     }
 
-    @Throws(NullPointerException::class)
     fun remove() {
-        if (::encryptedSharedPreferences.isInitialized) {
-            with(encryptedSharedPreferences.edit()) {
-                remove(BuildConfig.TOKEN_KEY)
-                apply()
-            }
-        } else throw NullPointerException("Call TokenEntry's init method in Application's onCreate method.")
+        tokenRepository.removeToken(tokenKey)
     }
 }
