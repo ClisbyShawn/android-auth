@@ -35,17 +35,17 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        authViewModel = ViewModelProvider(this)
+        authViewModel = ViewModelProvider(requireActivity())
             .get(AuthViewModel::class.java)
 
         lifecycleScope.launchWhenStarted {
             authViewModel.authFlow.collect { status ->
                 when (status) {
-                    is LoginSuccess -> Toast.makeText(
-                        requireContext(),
-                        "Successfully Logged In",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is LoginSuccess -> {
+                        authViewModel.me()
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.frame_main_container, HomeFragment.newInstance()).commit()
+                    }
                     is LoginError -> Toast.makeText(
                         requireContext(),
                         status.errorMessage,
@@ -55,17 +55,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-        authViewModel.user.observe(this, { response ->
-            response.data?.let { user ->
-                Toast.makeText(requireContext(), "$user", Toast.LENGTH_LONG).show()
-            }
-
-            response.message?.let { error ->
-                Toast.makeText(requireContext(), error, Toast.LENGTH_LONG)
-                    .show()
-            }
-        })
-
         button_login_login.setOnClickListener {
             authViewModel.login(
                 mapOf(
@@ -73,14 +62,6 @@ class LoginFragment : Fragment() {
                     "password" to tie_login_password.text.toString().trim()
                 )
             )
-        }
-
-        button_login_me.setOnClickListener {
-            authViewModel.me()
-        }
-
-        button_login_logout.setOnClickListener {
-            authViewModel.logout()
         }
     }
 }
