@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.android.shawnclisby.androidauth.network.TokenEntry
+import androidx.lifecycle.lifecycleScope
 import com.android.shawnclisby.androidauth.viewModels.AuthViewModel
+import com.android.shawnclisby.androidauth.viewModels.AuthViewModel.AuthEvent.LoginError
+import com.android.shawnclisby.androidauth.viewModels.AuthViewModel.AuthEvent.LoginSuccess
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.coroutines.flow.collect
 
 class LoginFragment : Fragment() {
 
@@ -35,15 +38,22 @@ class LoginFragment : Fragment() {
         authViewModel = ViewModelProvider(this)
             .get(AuthViewModel::class.java)
 
-        authViewModel.token.observe(this, { response ->
-            response.data?.let { token ->
-                TokenEntry.onToken(token)
+        lifecycleScope.launchWhenStarted {
+            authViewModel.authFlow.collect { status ->
+                when (status) {
+                    is LoginSuccess -> Toast.makeText(
+                        requireContext(),
+                        "Successfully Logged In",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    is LoginError -> Toast.makeText(
+                        requireContext(),
+                        status.errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-
-            response.message?.let { error ->
-                Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
-            }
-        })
+        }
 
         authViewModel.user.observe(this, { response ->
             response.data?.let { user ->
