@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.shawnclisby.androidauth.models.User
+import com.android.shawnclisby.androidauth.models.Session
+import com.android.shawnclisby.androidauth.models.SessionFactory
 import com.android.shawnclisby.androidauth.network.AuthHTTP
 import com.android.shawnclisby.androidauth.network.TokenEntry
 import com.android.shawnclisby.androidauth.network.handler.AuthResponseHandler
-import com.android.shawnclisby.androidauth.network.handler.Resource
 import com.android.shawnclisby.androidauth.repo.AuthRepository
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.Channel
@@ -19,8 +19,8 @@ class AuthViewModel : ViewModel() {
 
     private val authRepo = AuthRepository(AuthHTTP, AuthResponseHandler())
 
-    private val _user: MutableLiveData<Resource<User?>> = MutableLiveData(Resource.loading(null))
-    val user: LiveData<Resource<User?>> = _user
+    private val _session: MutableLiveData<Session?> = MutableLiveData(null)
+    val session: LiveData<Session?> = _session
 
     private val authChannel = Channel<AuthEvent>()
     val authFlow = authChannel.receiveAsFlow()
@@ -37,14 +37,17 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun me() {
-        viewModelScope.launch(IO) {
-            _user.postValue(authRepo.me())
+    fun me() = viewModelScope.launch(IO) {
+        val resource = authRepo.me()
+        resource.data?.let { user ->
+            _session.postValue(SessionFactory.create(user))
         }
     }
 
+
     fun logout() {
         authRepo.logout()
+        _session.value?.logout()
     }
 
     sealed class AuthEvent {
