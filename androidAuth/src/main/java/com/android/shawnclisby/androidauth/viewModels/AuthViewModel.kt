@@ -31,7 +31,7 @@ class AuthViewModel : ViewModel() {
             TokenEntry.onToken(token)
             authChannel.send(AuthEvent.LoginSuccess())
         }
-        
+
         resource.message?.let { error ->
             authChannel.send(AuthEvent.LoginError(errorMessage = error))
         }
